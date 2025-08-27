@@ -1,25 +1,31 @@
-import glob
-from pathlib import Path
-from typing import List, Dict, Any
+from langchain_community.document_loaders import DirectoryLoader, TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from typing import List
 from . import config
 
-def read_docs() -> List[Dict[str, Any]]:
-    docs = []
-    for p in glob.glob(str(config.DATA_DIR / "**/*.txt"), recursive=True):
-        t = Path(p).read_text(encoding="utf-8", errors="ignore").strip()
-        if t: docs.append({"title": Path(p).stem, "text": t, "meta": {"source": p}})
-    return docs
+def load_documents() -> List[dict]:
+    """
+    지정된 디렉토리에서 문서를 로드합니다.
+    .txt 파일만 로드하도록 설정합니다.
+    """
+    loader = DirectoryLoader(
+        str(config.DATA_DIR),
+        glob="**/*.txt",
+        loader_cls=TextLoader,
+        loader_kwargs={"encoding": "utf-8"},
+        show_progress=True,
+        use_multithreading=True
+    )
+    return loader.load()
 
-def chunk(text: str, size=config.CHUNK_SIZE, overlap=config.OVERLAP) -> List[str]:
-    text = text.replace("\r\n","\n").replace("\r","\n")
-    paras = [p.strip() for p in text.split("\n\n") if p.strip()]
-    out = []
-    for para in paras:
-        if len(para) <= size: out.append(para); continue
-        s=0
-        while s < len(para):
-            e=s+size; out.append(para[s:e]); s=e-overlap
-            if s<0: s=0
-            if s>=len(para): break
-    return out
-
+def split_documents(documents: List[dict]) -> List[dict]:
+    """
+    로드된 문서를 설정에 따라 청크로 분할합니다.
+    """
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=config.CHUNK_SIZE,
+        chunk_overlap=config.OVERLAP,
+        length_function=len,
+        is_separator_regex=False,
+    )
+    return splitter.split_documents(documents)
