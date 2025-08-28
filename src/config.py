@@ -8,7 +8,9 @@ _project_root = os.path.dirname(_current_dir)
 
 # 데이터 디렉토리
 DATA_DIR = os.path.join(_project_root, "data", "raw")
+#
+CHUNK_SIZE, OVERLAP = 400, 60
 
 # --- 모델 설정 ---
 # HuggingFace 임베딩 모델 이름
-EMBEDDING_MODEL_NAME = "jhgan/ko-sroberta-multitask"
+EMBED_MODEL = os.getenv("EMBED_MODEL", "jhgan/ko-sbert-nli")
