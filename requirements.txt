@@ -1,6 +1,6 @@
 langchain
 langchain-community
-langchain-co
+langchain-core
 langchain-text-splitters
 langchain-huggingface
 bs4
@@ -11,4 +11,4 @@ python-dotenv
 faiss-cpu
 sentence-transformers
 httpx
-streamlitreamlit
+pdfplumber

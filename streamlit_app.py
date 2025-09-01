@@ -77,7 +77,7 @@ st.markdown("---")
 rag_chain = get_rag_chain_with_source()
 
 if rag_chain is None:
-    st.error(f"⚠️  데이터 파일을 찾을 수 없습니다. '{config.DATA_DIR}' 디렉토리에 .txt 파일을 넣어주세요.")
+    st.error(f"⚠️  데이터 파일을 찾을 수 없습니다. '{config.DATA_DIR}' 디렉토리에 .txt 또는 .pdf 파일을 넣어주세요.")
 else:
     # 사용자 질문 입력
     query = st.text_input(
