@@ -12,3 +12,4 @@ faiss-cpu
 sentence-transformers
 httpx
 pdfplumber
+ragas
