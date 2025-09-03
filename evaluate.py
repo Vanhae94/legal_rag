@@ -1,4 +1,3 @@
-
 import os
 import pandas as pd
 from datasets import Dataset
@@ -10,7 +9,18 @@ from ragas.metrics import (
     context_precision,
 )
 import asyncio
-from streamlit_app import get_rag_chain_with_source  # 기존 RAG 체인을 재사용
+from dotenv import load_dotenv
+
+from streamlit_app import get_rag_chain_with_source
+from src.llm import get_llm
+from src.config import EMBED_MODEL
+from langchain_huggingface import HuggingFaceEmbeddings
+from ragas.llms import LangchainLLMWrapper
+from ragas.embeddings import LangchainEmbeddingsWrapper
+
+
+# .env 파일 로드
+load_dotenv()
 
 # asyncio 이벤트 루프 관련 설정 (Windows 환경에서 필요할 수 있음)
 if os.name == 'nt':
@@ -65,6 +75,12 @@ def run_evaluation(dataset: Dataset):
     """
     print("RAGAs 평가를 시작합니다...")
     
+    # Ragas에서 사용할 모델 초기화
+    ragas_llm = LangchainLLMWrapper(get_llm())
+    ragas_embeddings = LangchainEmbeddingsWrapper(
+        HuggingFaceEmbeddings(model_name=EMBED_MODEL)
+    )
+
     # 평가 지표 정의
     metrics = [
         faithfulness,       # 답변이 근거에 충실한가
@@ -77,6 +93,8 @@ def run_evaluation(dataset: Dataset):
     result = evaluate(
         dataset=dataset,
         metrics=metrics,
+        llm=ragas_llm,
+        embeddings=ragas_embeddings,
     )
     
     print("RAGAs 평가 완료.")
