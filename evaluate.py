@@ -112,5 +112,5 @@ if __name__ == "__main__":
     
     # 결과를 DataFrame으로 변환하여 CSV 파일로 저장
     df_result = evaluation_result.to_pandas()
-    df_result.to_csv("evaluation_result_baseline.csv", index=False)
+    df_result.to_csv("evaluation_result_baseline.csv", index=False, encoding="utf-8-sig")
     print("\n'evaluation_result_baseline.csv' 파일로 초기 성능 평가 결과가 저장되었습니다.")
