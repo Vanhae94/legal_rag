@@ -91,7 +91,7 @@ else:
                 try:
                     # 체인 실행 (결과에 'answer'와 'context' 포함)
                     result = rag_chain.invoke(query)
-                    
+
                     st.markdown("#### 답변")
                     st.markdown(result["answer"].strip())
                     
