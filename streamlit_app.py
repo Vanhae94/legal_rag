@@ -16,7 +16,7 @@ def get_rag_chain_with_source():
     Streamlit의 캐시 기능을 사용하여 리소스를 한 번만 로드합니다.
     """
     # 1. 데이터 로드 및 분할
-    docs = data_loader.load_documents()
+    docs = data_loader.load_all_documents()
     if not docs:
         return None
     splits = data_loader.split_documents(docs)

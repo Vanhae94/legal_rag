@@ -88,9 +88,9 @@ def load_pdf_documents() -> List[Document]:
                     print(f"'{pdf_path}' 파일 처리 중 오류 발생: {e}")  # 오류 로깅 추가
     return documents
 
-def load_documents() -> List[Document]:
+def load_txt_documents() -> List[Document]:
     """
-    지정된 디렉토리에서 .txt 및 .pdf 문서를 로드합니다.
+    지정된 디렉토리에서 .txt 문서를 로드합니다.
     """
     txt_loader = DirectoryLoader(
         str(config.DATA_DIR),
@@ -100,10 +100,14 @@ def load_documents() -> List[Document]:
         show_progress=True,
         use_multithreading=True
     )
-    txt_documents = txt_loader.load()
-    
+    return txt_loader.load()
+
+def load_all_documents() -> List[Document]:
+    """
+    지정된 디렉토리에서 모든 문서(.txt, .pdf)를 로드하고 결합합니다.
+    """
+    txt_documents = load_txt_documents()
     pdf_documents = load_pdf_documents()
-    
     return txt_documents + pdf_documents
 
 def split_documents(documents: List[Document]) -> List[Document]:
