@@ -8,7 +8,8 @@ _project_root = os.path.dirname(_current_dir)
 
 # 데이터 디렉토리
 DATA_DIR = os.path.join(_project_root, "data", "raw")
-#
+
+# 청킹
 CHUNK_SIZE, OVERLAP = 400, 60
 
 # --- 모델 설정 ---
