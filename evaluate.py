@@ -11,7 +11,7 @@ from ragas.metrics import (
 import asyncio
 from dotenv import load_dotenv
 
-from streamlit_app import get_rag_chain_with_source
+from app import get_rag_chain_with_source
 from src.llm import get_llm
 from src.config import EMBED_MODEL
 from langchain_huggingface import HuggingFaceEmbeddings
