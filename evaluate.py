@@ -5,8 +5,8 @@ from ragas import evaluate
 from ragas.metrics import (
     faithfulness,
     answer_relevancy,
-    context_recall,
-    context_precision,
+    context_recall,# 질문에대해 필요한 정보다 검색된 컨텍스트에 포함되어 있는가
+    context_precision,# 질문에대해 검색된 컨텍스트가 얼마나 관련성이 높은가
 )
 import asyncio
 from dotenv import load_dotenv
@@ -104,6 +104,17 @@ def run_evaluation(dataset: Dataset):
     return result
 
 if __name__ == "__main__":
+    import sys
+
+    # 커맨드 라인 인자로부터 실험 이름 가져오기 (없으면 'baseline')
+    if len(sys.argv) > 1:
+        experiment_name = sys.argv[1]
+    else:
+        experiment_name = "baseline"
+
+    print(f"--- {experiment_name} 실험을 시작합니다. ---")
+
+
     # 평가 데이터셋 생성
     evaluation_dataset = create_evaluation_dataset()
     
@@ -112,5 +123,6 @@ if __name__ == "__main__":
     
     # 결과를 DataFrame으로 변환하여 CSV 파일로 저장
     df_result = evaluation_result.to_pandas()
-    df_result.to_csv("evaluation_result_baseline.csv", index=False, encoding="utf-8-sig")
-    print("\n'evaluation_result_baseline.csv' 파일로 초기 성능 평가 결과가 저장되었습니다.")
+    output_filename = f"evaluation_result_{experiment_name}.csv"
+    df_result.to_csv(output_filename, index=False, encoding="utf-8-sig")
+    print(f"\n'{output_filename}' 파일로 성능 평가 결과가 저장되었습니다.")
