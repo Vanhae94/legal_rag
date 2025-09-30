@@ -6,10 +6,11 @@ langchain-huggingface
 bs4
 chromadb
 streamlit
-langchain-google-genai
 python-dotenv
 faiss-cpu
 sentence-transformers
 httpx
 pdfplumber
 ragas
+langchain-openai
+langchain-google-genai
