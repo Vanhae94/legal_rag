@@ -10,7 +10,7 @@ _project_root = os.path.dirname(_current_dir)
 DATA_DIR = os.path.join(_project_root, "data", "raw")
 
 # 청킹
-CHUNK_SIZE, OVERLAP = 400, 60
+CHUNK_SIZE, OVERLAP = 800, 150
 
 # --- 모델 설정 ---
 # HuggingFace 임베딩 모델 이름

@@ -2,6 +2,9 @@ import streamlit as st
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableParallel
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors import CrossEncoderReranker
+from langchain_community.cross_encoders import HuggingFaceCrossEncoder
 
 from src import config, data_loader, vector_store, llm
 
@@ -24,7 +27,16 @@ def get_rag_chain_with_source():
     # 2. 임베딩 및 벡터 저장소 생성
     embeddings = vector_store.get_embedding_model()
     db = vector_store.build_vector_store(splits, embeddings)
-    retriever = db.as_retriever(search_kwargs={"k": 6})
+    
+    # 2.1. 기본 리트리버 설정 (더 많은 후보군 확보)
+    base_retriever = db.as_retriever(search_kwargs={"k": 20})
+
+    # 2.2. 재순위화(Re-ranking) 모델 설정
+    cross_encoder_model = HuggingFaceCrossEncoder(model_name="dragonkue/bge-reranker-v2-m3-ko")
+    compressor = CrossEncoderReranker(model=cross_encoder_model, top_n=4)
+    compression_retriever = ContextualCompressionRetriever(
+        base_compressor=compressor, base_retriever=base_retriever
+    )
 
     # 3. LLM 인스턴스화
     llm_instance = llm.get_llm()
@@ -63,7 +75,7 @@ def get_rag_chain_with_source():
 
     # 출처(context)와 질문(question)을 받고, 답변(answer)을 생성하여 함께 반환
     rag_chain_with_source = RunnableParallel(
-        {"context": retriever, "question": RunnablePassthrough()}
+        {"context": compression_retriever, "question": RunnablePassthrough()}
     ).assign(answer=rag_chain_from_docs)
     
     return rag_chain_with_source
