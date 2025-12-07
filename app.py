@@ -33,7 +33,7 @@ def get_rag_chain_with_source():
 
     # 2.2. 재순위화(Re-ranking) 모델 설정
     cross_encoder_model = HuggingFaceCrossEncoder(model_name="dragonkue/bge-reranker-v2-m3-ko")
-    compressor = CrossEncoderReranker(model=cross_encoder_model, top_n=4)
+    compressor = CrossEncoderReranker(model=cross_encoder_model, top_n=6)
     compression_retriever = ContextualCompressionRetriever(
         base_compressor=compressor, base_retriever=base_retriever
     )
